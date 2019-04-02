@@ -1,0 +1,32 @@
+import numpy as np
+import cv2
+import time
+
+left = cv2.VideoCapture(1)
+right = cv2.VideoCapture(2)
+
+
+i = 1
+
+# Grab both frames first, then retrieve to minimize latency between cameras
+while(True):
+    if not (left.grab() and right.grab()):
+        print("No more frames")
+        break
+
+    ret1, leftFrame = left.retrieve()
+    ret2, rightFrame = right.retrieve()
+
+    cv2.imwrite('left{}.jpg'.format(i), leftFrame)
+    cv2.imwrite('right{}.jpg'.format(i), rightFrame)
+
+    cv2.imshow('left', leftFrame)
+    cv2.imshow('right', rightFrame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+    i += 1
+    time.sleep(2)
+left.release()
+right.release()
+cv2.destroyAllWindows()
